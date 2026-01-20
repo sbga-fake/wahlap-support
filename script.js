@@ -196,6 +196,9 @@ function processAvocadoReply(text) {
   } else if (text.includes('更新')) {
     const delay = getRandomDelay(5, 10);
     scheduleReply('avocado', '您好！有关游戏更新的更多消息请关注官方B站动态！', delay);
+  } else if (text.includes('换') && text.includes('日服')) {
+    const delay = getRandomDelay(10, 20);
+    scheduleReply('avocado', '有问题也处理不了', delay);
   } else if (text.includes('能') && text.includes('吗')) {
     const delay = getRandomDelay(4, 8);
     scheduleReply('avocado', 'ㅠㅠ已第一时间反馈给开发团队，🥺有最新消息会尽快通知，很抱歉感谢您的耐心等待！', delay);
