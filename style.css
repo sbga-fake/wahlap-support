@@ -54,12 +54,12 @@ body {
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .app-container {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   background: var(--bg-primary);
 }
 
@@ -481,7 +481,7 @@ body {
   padding: 10px 12px;
   border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-primary);
   resize: none;
   outline: none;
@@ -569,21 +569,8 @@ body {
   right: 0;
 }
 
-.menu-item:hover .submenu {
-  display: block;
-}
-
 .submenu.open {
   display: block;
-}
-
-@media (hover: none) {
-  .menu-item:hover .submenu {
-    display: none;
-  }
-  .submenu.open {
-    display: block;
-  }
 }
 
 .submenu a, .submenu-message {
@@ -621,18 +608,23 @@ body {
     display: none;
   }
 
+  .app-container {
+    position: relative;
+    overflow: hidden;
+  }
+
   .contact-list {
     width: 100%;
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    z-index: 10;
-    transition: transform 0.3s ease;
+    z-index: 20;
+    background: var(--bg-secondary);
   }
 
   .contact-list.hidden {
-    transform: translateX(-100%);
+    display: none;
   }
 
   .chat-area {
@@ -641,35 +633,19 @@ body {
     top: 0;
     right: 0;
     bottom: 0;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
+    z-index: 10;
+    display: none;
   }
 
   .chat-area.active {
-    transform: translateX(0);
+    display: flex;
   }
 
   .back-btn {
     display: flex;
   }
 
-  .app-container {
-    position: relative;
-  }
-
   .message {
     max-width: 85%;
-  }
-
-  .chat-input-area {
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  }
-
-  .service-menu {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .loading-bar {
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 }

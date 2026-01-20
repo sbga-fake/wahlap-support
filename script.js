@@ -291,13 +291,19 @@ function handleConsultCode() {
   addMessage('发行咨询代码', 'self', 'maimai');
 }
 
-function toggleSubmenu(menuItem) {
+function closeAllSubmenus() {
+  document.querySelectorAll('.submenu.open').forEach(s => s.classList.remove('open'));
+}
+
+function toggleSubmenu(menuItem, e) {
+  e.preventDefault();
+  e.stopPropagation();
+  
   const submenu = menuItem.querySelector('.submenu');
   if (!submenu) return;
   
   const isOpen = submenu.classList.contains('open');
-  
-  document.querySelectorAll('.submenu.open').forEach(s => s.classList.remove('open'));
+  closeAllSubmenus();
   
   if (!isOpen) {
     submenu.classList.add('open');
@@ -321,19 +327,41 @@ contactItems.forEach(item => {
 
 backBtn.addEventListener('click', goBack);
 
-qrcodeBtn.addEventListener('click', handleQRCode);
+qrcodeBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  handleQRCode();
+});
 
-document.querySelector('[data-action="consultCode"]')?.addEventListener('click', handleConsultCode);
+document.querySelector('[data-action="consultCode"]')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeAllSubmenus();
+  handleConsultCode();
+});
 
 document.querySelectorAll('.menu-item.has-submenu').forEach(item => {
-  item.addEventListener('click', (e) => {
+  item.addEventListener('click', (e) => toggleSubmenu(item, e));
+  item.addEventListener('touchend', (e) => toggleSubmenu(item, e));
+});
+
+document.querySelectorAll('.submenu a').forEach(link => {
+  link.addEventListener('click', (e) => {
     e.stopPropagation();
-    toggleSubmenu(item);
+    closeAllSubmenus();
+  });
+  link.addEventListener('touchend', (e) => {
+    e.stopPropagation();
+    closeAllSubmenus();
+    window.open(link.href, link.target || '_self');
   });
 });
 
-document.addEventListener('click', () => {
-  document.querySelectorAll('.submenu.open').forEach(s => s.classList.remove('open'));
+document.querySelector('[data-action="consultCode"]')?.addEventListener('touchend', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+  closeAllSubmenus();
+  handleConsultCode();
 });
+
+messagesContainer.addEventListener('click', closeAllSubmenus);
 
 updateChatUI();
