@@ -18,13 +18,13 @@ const contacts = {
   maimai: {
     name: '舞萌 | 中二',
     displayName: '舞萌 | 中二',
-    avatar: 'assets/maimai.png',
+    avatar: 'assets/chunimai.png',
     messages: [],
     isService: true
   }
 };
 
-let currentContact = 'avocado';
+let currentContact = null;
 let pendingReplies = {};
 
 const messagesContainer = document.getElementById('messagesContainer');
@@ -78,6 +78,8 @@ function escapeHtml(text) {
 
 function renderMessages() {
   messagesContainer.innerHTML = '';
+  if (!currentContact) return;
+  
   const messages = contacts[currentContact].messages;
   
   messages.forEach(msg => {
@@ -96,6 +98,7 @@ function scrollToBottom() {
 }
 
 function showTypingIndicator() {
+  if (!currentContact) return;
   const existing = messagesContainer.querySelector('.typing-wrapper');
   if (existing) return;
   
@@ -205,6 +208,7 @@ function processLemonReply() {
 }
 
 function sendMessage() {
+  if (!currentContact) return;
   const text = messageInput.value.trim();
   if (!text) return;
   
@@ -219,6 +223,12 @@ function sendMessage() {
 }
 
 function updateChatUI() {
+  if (!currentContact) {
+    chatInputArea.style.display = 'none';
+    serviceMenu.classList.remove('active');
+    return;
+  }
+  
   const isService = contacts[currentContact].isService;
   
   if (isService) {
@@ -232,9 +242,7 @@ function updateChatUI() {
   hideLoadingBar();
 }
 
-function switchContact(contactId) {
-  if (currentContact === contactId) return;
-  
+function openContact(contactId) {
   hideTypingIndicator();
   hideLoadingBar();
   currentContact = contactId;
@@ -260,6 +268,11 @@ function switchContact(contactId) {
 function goBack() {
   contactList.classList.remove('hidden');
   chatArea.classList.remove('active');
+  
+  contactItems.forEach(item => {
+    item.classList.remove('active');
+  });
+  currentContact = null;
 }
 
 function handleQRCode() {
@@ -275,6 +288,19 @@ function handleConsultCode() {
   addMessage('发行咨询代码', 'self', 'maimai');
 }
 
+function toggleSubmenu(menuItem) {
+  const submenu = menuItem.querySelector('.submenu');
+  if (!submenu) return;
+  
+  const isOpen = submenu.classList.contains('open');
+  
+  document.querySelectorAll('.submenu.open').forEach(s => s.classList.remove('open'));
+  
+  if (!isOpen) {
+    submenu.classList.add('open');
+  }
+}
+
 sendBtn.addEventListener('click', sendMessage);
 
 messageInput.addEventListener('keydown', (e) => {
@@ -286,7 +312,7 @@ messageInput.addEventListener('keydown', (e) => {
 
 contactItems.forEach(item => {
   item.addEventListener('click', () => {
-    switchContact(item.dataset.contact);
+    openContact(item.dataset.contact);
   });
 });
 
@@ -296,5 +322,15 @@ qrcodeBtn.addEventListener('click', handleQRCode);
 
 document.querySelector('[data-action="consultCode"]')?.addEventListener('click', handleConsultCode);
 
-renderMessages();
+document.querySelectorAll('.menu-item.has-submenu').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSubmenu(item);
+  });
+});
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.submenu.open').forEach(s => s.classList.remove('open'));
+});
+
 updateChatUI();

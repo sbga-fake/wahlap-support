@@ -52,7 +52,9 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .app-container {
@@ -571,6 +573,19 @@ body {
   display: block;
 }
 
+.submenu.open {
+  display: block;
+}
+
+@media (hover: none) {
+  .menu-item:hover .submenu {
+    display: none;
+  }
+  .submenu.open {
+    display: block;
+  }
+}
+
 .submenu a, .submenu-message {
   display: block;
   padding: 10px 16px;
@@ -644,5 +659,17 @@ body {
 
   .message {
     max-width: 85%;
+  }
+
+  .chat-input-area {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+
+  .service-menu {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .loading-bar {
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 }
