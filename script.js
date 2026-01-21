@@ -288,7 +288,23 @@ function handleQRCode() {
 }
 
 function handleConsultCode() {
+  // 1. 发送用户点击的消息（保持原有逻辑）
   addMessage('发行咨询代码', 'self', 'maimai');
+  
+  // 2. 设置一个短暂延迟模拟系统处理（例如 500 毫秒）
+  setTimeout(() => {
+    // 生成前 4 位随机数 (0000-9999)
+    const part1 = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    
+    // 生成中间 2 位随机数 (00-99)
+    const part2 = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+    
+    // 拼接成格式：XXXX - XX11 - 4514
+    const codeMessage = `${part1} - ${part2}11 - 4514`;
+    
+    // 3. 作为“对方”(other) 发送回复消息给 'maimai' 联系人
+    addMessage(codeMessage, 'other', 'maimai');
+  }, 500);
 }
 
 function closeAllSubmenus() {
